@@ -13,7 +13,6 @@
     <meta property="og:image" content="https://rishabhkhan82.github.io/cafe-x/assets/images/og.jpg">
     <meta property="og:url" content="https://rishabhkhan82.github.io/cafe-x/">
     <meta property="og:type" content="website">
-    <meta name="theme-color" content="#7c3aed">
     <meta name="theme-color" content="#ef4444"> 
     <link rel="canonical" href="https://www.cafexpos.in/">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -113,6 +112,7 @@
                     <a href="#demo" class="hidden md:inline-flex px-4 py-2 rounded-xl bg-primary-500 text-white text-sm hover:bg-primary-600 transition-colors">
                         Book a live demo
                     </a>
+                    
                     
                     <!-- Mobile Menu Button -->
                     <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
@@ -2042,6 +2042,45 @@
         </div>
     </footer>
 
+        <!-- Pre-Register Popup Modal -->
+<div id="preRegisterModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-md relative my-8 max-h-[90vh] overflow-y-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <style>
+            #preRegisterModal > div::-webkit-scrollbar { display: none; }
+        </style>
+        <button onclick="document.getElementById('preRegisterModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-primary-500 text-xl">&times;</button>
+        <h2 class="text-1xl md:text-2xl font-extrabold">Pre Register for Cafe-X</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6 text-sm mt-3">Enroll now to receive free setup, training, and support, plus enjoy 1 month of Pro Plan access when Cafe‑X POS launches.</p>
+        <form  id="pre-register-form" action="https://api.web3forms.com/submit" method="POST">
+            <!-- Hidden Access Key -->
+            <input type="hidden" name="access_key" value="8d776a4d-06a2-474b-b6be-cbfcae0b8c03">
+<div class="space-y-4">
+    <div>
+        <label for="pre-name" class="text-xs text-gray-500 dark:text-gray-400">Your Name*</label>
+        <input id="pre-name" name="name" class="mt-1 w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 outline-none required" placeholder="Your Name">
+    </div>
+    <div>
+        <label for="pre-mobile" class="text-xs text-gray-500 dark:text-gray-400">Mobile No*</label>
+        <input id="pre-mobile" name="mobile" type="tel" class="mt-1 w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 outline-none required" placeholder="9876543210">
+    </div>
+    <div>
+        <label for="pre-restaurant" class="text-xs text-gray-500 dark:text-gray-400">Restaurant name*</label>
+        <input id="pre-restaurant" name="restaurant" class="mt-1 w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 outline-none required" placeholder="Cafe-X Bistro">
+    </div>
+    <div>
+        <label for="pre-notes" class="text-xs text-gray-500 dark:text-gray-400">Anything we should know?</label>
+        <textarea id="pre-notes" name="notes" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 outline-none" placeholder="Special requests, busy hours, etc."></textarea>
+    </div>
+</div>
+            <button type="submit" class="mt-6 w-full px-4 py-3 rounded-xl bg-primary-500 text-white font-semibold hover:bg-primary-600">Pre Register</button>
+        </form>
+    </div>
+</div>
+    <!-- Fixed Pre-Register Button -->
+    <button onclick="document.getElementById('preRegisterModal').classList.remove('hidden')" class="fixed bottom-6 right-6 z-40 px-4 py-2 rounded-xl bg-primary-500 text-white shadow-lg hover:bg-primary-600 transition-all flex items-center gap-2">
+        <span class="text-sm">Pre Register</span>
+    </button>
+
     <!-- Scripts -->
     <script>
     const themeToggle = document.getElementById('theme-toggle');
@@ -2183,6 +2222,68 @@
                 });
             }
         })();
+        </script>
+
+        <script>
+                    // Form submission
+        document.getElementById('pre-register-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Get form data
+            const prerestaurant = document.getElementById('pre-restaurant').value;
+            const preownerName = document.getElementById('pre-name').value;
+            const premobile = document.getElementById('pre-mobile').value;
+
+            // Simple validation
+            if (!prerestaurant || !preownerName || !premobile ) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            const formData = new FormData(this);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Processing...';
+            submitBtn.disabled = true;
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+                .then(async (response) => {
+                    let json = await response.json();
+                    if (response.status == 200) {
+                        alert('🎉 Congratulations! Your free trial has been Enrolled. You will receive an SMS notification once Cafe-X is launched, along with further instructions for setup.');
+                        submitBtn.innerHTML = '🎉 Enrolled Successfully';
+                        submitBtn.disabled = true;
+                        // Close the modal after success
+                        document.getElementById('preRegisterModal').classList.add('hidden');
+                    } else {
+                        console.log(response);
+                        submitBtn.innerHTML = json.message;
+                        submitBtn.disabled = true;
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    submitBtn.innerHTML = '😢 Something went wrong!';
+                    submitBtn.disabled = true;
+                })
+                .then(function () {
+                    document.getElementById('pre-register-form').reset();
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 3000);
+                });
+        });
+
         </script>
         
 
